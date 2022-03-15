@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import TodoList from "./component/counter/TodoList";
+import TodoTicker from "./component/counter/TodoTicker";
+import BookList from "./component/counter/BookList";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import "./App.css";
+import styled from "styled-components";
+
+const Header = styled.div`
+  position: relative;
+  background-color: #789395;
+`;
+
+const Body = styled.body`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #e5e3c9;
+`;
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <Header>
+          <TodoTicker />
+        </Header>
+        <Body>
+          <BookList />
+          <TodoList />
+        </Body>
+        <footer></footer>
+      </div>
+    );
+  }
 }
-
-export default App;
