@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 interface Props {
   createInput: string;
-  //   onChange(): React.ChangeEvent<string>;
+  onChange(e: React.ChangeEvent<HTMLInputElement>): void;
 }
 
 interface State {}
@@ -28,12 +28,12 @@ const Input = styled.input`
 export default class TodoInput extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { createInput } = this.props;
-    console.log("createInput:: " + this.props.createInput);
+    console.log("B createInput : " + this.props.createInput);
 
     return (
       <div>
         <Input
-          //   onChange={this.props.onChange}
+          onChange={this.props.onChange}
           placeholder="할일을 입력 하세요."
           value={createInput}
         ></Input>

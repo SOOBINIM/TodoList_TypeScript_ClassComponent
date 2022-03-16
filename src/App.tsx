@@ -8,7 +8,8 @@ import styled from "styled-components";
 
 const Header = styled.div`
   position: relative;
-  background-color: #789395;
+  background-color: #2f4858;
+  color: white;
 `;
 
 const Body = styled.body`

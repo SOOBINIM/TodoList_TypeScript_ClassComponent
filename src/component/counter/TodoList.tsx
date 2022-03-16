@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import TodoInput from "./TodoInput";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Div = styled.div`
   margin: 0 auto;
@@ -9,7 +10,7 @@ const Div = styled.div`
 
   margin-top: 200px;
 
-  background-color: #b4cfb0;
+  background-color: #628784;
   border-radius: 50px;
 `;
 
@@ -23,12 +24,15 @@ const Li = styled.li`
   list-style: none;
   font-size: 32px;
   font-weight: 400;
-  background-color: #e5e3c9;
+  background-color: #b5c5ae;
 
   width: 769px;
   border-radius: 10px;
   margin-bottom: 10px;
   padding: 15px 5px;
+
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Form = styled.form`
@@ -37,12 +41,12 @@ const Form = styled.form`
   margin-right: 50px;
 `;
 
-const Button = styled.button`
+const CreateButton = styled.button`
   margin-top: 30px;
   width: 150px;
   height: 50px;
   border-radius: 30px;
-  background-color: #94b49f;
+  background-color: #89a698;
   font-family: "Dongle", sans-serif;
   font-size: 30px;
 
@@ -51,10 +55,13 @@ const Button = styled.button`
   outline: none;
 `;
 
+const noPointer = { cursor: "pointer" };
+
 interface Props {}
 
 interface State {
   todoItem: {
+    id: number;
     todoTitle: string;
     todoComplete: boolean;
   }[];
@@ -62,16 +69,64 @@ interface State {
 }
 
 export default class TodoList extends React.Component<Props, State> {
+  id: number = 3;
   constructor(props: State) {
     super(props);
     this.state = {
       todoItem: [
-        { todoTitle: "리액트 공부하기", todoComplete: true },
-        { todoTitle: "타입스크립트 공부하기", todoComplete: false },
-        { todoTitle: "퍼블리싱 공부하기", todoComplete: false },
+        { id: 0, todoTitle: "리액트 공부하기", todoComplete: true },
+        { id: 1, todoTitle: "타입스크립트 공부하기", todoComplete: false },
+        { id: 2, todoTitle: "퍼블리싱 공부하기", todoComplete: false },
       ],
       createInput: "",
     };
+  }
+
+  componentDidMount() {
+    // try {
+    // console.log(typeof JSON.stringify(this.state.todoItem));
+    console.log("componentDidMount");
+    // const todoData = JSON.stringify(this.state.todoItem);
+    // const storageTodoData = localStorage.getItem(todoData);
+    // if (storageTodoData) {
+    //   this.setState({
+    //     todoItem: JSON.parse(storageTodoData),
+    //   });
+    //   console.log("storageTodoData : " + storageTodoData);
+    // }
+    // console.log("storageTodoData : " + storageTodoData);
+    console.log(localStorage.getItem("todoData"));
+    const localStorageData = localStorage.getItem("todoData");
+    if (localStorageData) {
+      this.setState({
+        todoItem: JSON.parse(localStorageData),
+      });
+    }
+
+    //   const todoData = localStorage.getItem(this.state.todoItem);
+
+    //   if (todoData) {
+    //     this.setState({
+    //       todoItem: JSON.parse(todoData),
+    //     });
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  }
+
+  componentDidUpdate(nextProps: Props, nextState: State) {
+    console.log("componentDidUpdate");
+
+    if (
+      JSON.stringify(nextState.todoItem) !== JSON.stringify(this.state.todoItem)
+    ) {
+      localStorage.setItem("todoData", JSON.stringify(this.state.todoItem));
+      //   localStorage.setItem(JSON.stringify(this.state.todoItem));
+    }
+
+    // if (nextState.todoItem.length !== this.state.todoItem.length) {
+    // }
   }
 
   onToggle = (toggle: boolean, e: React.MouseEvent): void => {
@@ -82,16 +137,23 @@ export default class TodoList extends React.Component<Props, State> {
 
   onCreate = (e: React.FormEvent): void => {
     e.preventDefault();
-    console.log("@@@createInput : " + this.state.createInput);
     this.setState(({ todoItem, createInput }) => ({
       todoItem: todoItem.concat({
+        id: this.id++,
         todoTitle: createInput,
         todoComplete: false,
       }),
+      createInput: "",
     }));
   };
 
-  onChange = (e: React.ChangeEvent<HTMLInputElement>): any => {
+  onDelete = (id: number): void => {
+    this.setState(({ todoItem }) => ({
+      todoItem: todoItem.filter((data) => data.id !== id),
+    }));
+  };
+
+  onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { value } = e.currentTarget;
     this.setState({
       createInput: value,
@@ -104,9 +166,9 @@ export default class TodoList extends React.Component<Props, State> {
         <Form onSubmit={this.onCreate}>
           <TodoInput
             createInput={this.state.createInput}
-            // onChange={this.onChange}
+            onChange={this.onChange}
           />
-          <Button>등록</Button>
+          <CreateButton>등록</CreateButton>
         </Form>
         <UlDiv>
           <Ul>
@@ -118,6 +180,15 @@ export default class TodoList extends React.Component<Props, State> {
                 }
               >
                 {data.todoTitle}
+                <div>
+                  <DeleteIcon
+                    fontSize="medium"
+                    style={noPointer}
+                    onClick={() => this.onDelete(data.id)}
+                  >
+                    삭제
+                  </DeleteIcon>
+                </div>
               </Li>
             ))}
           </Ul>
