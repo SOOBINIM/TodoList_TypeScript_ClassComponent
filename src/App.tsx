@@ -1,10 +1,8 @@
 import React from "react";
-import TodoList from "./component/counter/TodoList";
-import TodoTicker from "./component/counter/TodoTicker";
-import BookList from "./component/counter/BookList";
-
+import TodoTicker from "./etc/counter/TodoTicker";
 import "./App.css";
 import styled from "styled-components";
+import TodoCreateContain from "./containers/TodoCreateContain";
 
 const Header = styled.div`
   position: relative;
@@ -26,10 +24,14 @@ export default class App extends React.Component {
         <Header>
           <TodoTicker />
         </Header>
-        <Body>
-          <BookList />
-          <TodoList />
-        </Body>
+        <React.StrictMode>
+          <Body>
+            <TodoCreateContain />
+
+            {/* <TodoCreate />
+          <TodoList /> */}
+          </Body>
+        </React.StrictMode>
         <footer></footer>
       </div>
     );

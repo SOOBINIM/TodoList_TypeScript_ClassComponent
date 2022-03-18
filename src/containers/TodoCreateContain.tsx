@@ -1,29 +1,116 @@
+import styled from "styled-components";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+// import { useSelector, useDispatch } from "react-redux";
+import { ThermostatOutlined } from "@mui/icons-material";
+import React from "react";
+import { connect, MapDispatchToProps } from "react-redux";
+import { Dispatch } from "redux";
+
+// 프레젠테이셔널 컴포넌트
 import TodoCreate from "../components/TodoCreatePresent";
-
-import { useSelector, useDispatch } from "react-redux";
-
-import * as actions from "../modules/TodoList";
+// 투트 리듀서의 타입 -> 리듀서 state 값 타입
 import { RootState } from "../modules/RootReducer";
+// 리듀서에서 액션 생성 함수  가져옴
+import * as actions from "../modules/TodoList";
 
-function TodoContainer() {
-  const todoList = useSelector((state: RootState) => state.todoReducer);
-  const dispatch = useDispatch();
+type DispatchProps = {
+  todoCreate: typeof actions.todoCreate;
+  todoItem: actions.TodoForm[];
+  // todoDelete: typeof actions.todoDelete;
+};
+type StateProps = ReturnType<typeof mapStateToProps>;
+type TodoContainerProps = StateProps & DispatchProps;
 
-  const onCreate = () => {
-    dispatch(actions.todoCreate);
+class TodoContainer extends React.Component<TodoContainerProps> {
+  state = {
+    createInput: "",
   };
-  const onDelete = () => {
-    dispatch(actions.todoDelete);
+
+  onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { value } = e.currentTarget;
+    console.log("Input값 변화 : ", value);
+    this.setState({
+      createInput: value,
+    });
+  };
+  onCreate = (e: React.FormEvent): void => {
+    e.preventDefault();
+    console.log("onCreate 클릭");
+    this.props.todoCreate(this.state.createInput);
+
+    // this.setState(({ todoItem, createInput }) => ({
+    //   todoItem: todoItem.concat({
+    //     id: this.id++,
+    //     todoTitle: createInput,
+    //     todoComplete: false,
+    //   }),
+    //   createInput: "",
+    // }));
   };
 
-  const onChange = () => {
-    //   dispatch(actions.)
-  };
-
-  //   return <TodoCreate todoItem={todoList} onCreate={onCreate} />;
+  render(): React.ReactNode {
+    return (
+      <div>
+        <TodoCreate
+          todoItem={this.props.todoItem}
+          createInput={this.state.createInput}
+          // onCreate={this.props.}
+          onCreate={this.onCreate}
+          onChange={this.onChange}
+        />
+      </div>
+      //      <form onSubmit={this.props.onCreate}>
+      // <input onChange={this.props.onChange}></input>
+    );
+  }
 }
 
-export default TodoContainer;
+// 리덕스 스토어의 상태를 조회해서 어떤 것들을 props로 넣어줄지 정의
+const mapStateToProps = (state: RootState) => ({
+  todoItem: state.todoReducer,
+});
+
+// 액션을 디스패치하는 함수를 만들어서 props로 넣어줌
+// const mapDispatchProps = (dispatch: DispatchProps) => ({
+//   onCreate: (createInput: string) => dispatch(actions.todoCreate(createInput)),
+// });
+
+const mapDispatchProps = (dispatch: Dispatch) => {
+  return {
+    todoCreate: (createInput: string) =>
+      dispatch(actions.todoCreate(createInput)),
+    // todoDelete: (id) =? typeof actions.todoDelete;
+  };
+};
+
+// connect
+export default connect(mapStateToProps, mapDispatchProps)(TodoContainer);
+
+// 동일 코드
+// const enhance = connect(mapStateToProps, mapDispatchProps);
+// export default enhance(TodoContainer)
+
+// function TodoContainer() {
+//   const todoList = useSelector((state: RootState) => state.todoReducer);
+//   const dispatch = useDispatch();
+
+//   const onCreate = () => {
+//     dispatch(actions.todoCreate);
+//   };
+//   const onDelete = () => {
+//     dispatch(actions.todoDelete);
+//   };
+
+//   const onChange = () => {
+//     //   dispatch(actions.)
+//   };
+
+//   return <TodoCreate todoItem={todoList} />;
+//   //   return <TodoCreate todoItem={todoList} onCreate={onCreate} />;
+// }
+
+// export default TodoContainer;
 
 // todoItem: [
 //     { id: 0, todoTitle: "리액트 공부하기", todoComplete: true },
