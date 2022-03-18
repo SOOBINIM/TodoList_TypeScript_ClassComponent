@@ -1,6 +1,3 @@
-import styled from "styled-components";
-import DeleteIcon from "@mui/icons-material/Delete";
-
 // import { useSelector, useDispatch } from "react-redux";
 import { ThermostatOutlined } from "@mui/icons-material";
 import React from "react";
@@ -17,7 +14,7 @@ import * as actions from "../modules/TodoList";
 type DispatchProps = {
   todoCreate: typeof actions.todoCreate;
   todoItem: actions.TodoForm[];
-  // todoDelete: typeof actions.todoDelete;
+  todoDelete: typeof actions.todoDelete;
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type TodoContainerProps = StateProps & DispatchProps;
@@ -38,15 +35,11 @@ class TodoContainer extends React.Component<TodoContainerProps> {
     e.preventDefault();
     console.log("onCreate 클릭");
     this.props.todoCreate(this.state.createInput);
+  };
 
-    // this.setState(({ todoItem, createInput }) => ({
-    //   todoItem: todoItem.concat({
-    //     id: this.id++,
-    //     todoTitle: createInput,
-    //     todoComplete: false,
-    //   }),
-    //   createInput: "",
-    // }));
+  onDelete = (id: number): void => {
+    console.log("삭제삭제 : " + id);
+    this.props.todoDelete(id);
   };
 
   render(): React.ReactNode {
@@ -56,6 +49,7 @@ class TodoContainer extends React.Component<TodoContainerProps> {
           todoItem={this.props.todoItem}
           createInput={this.state.createInput}
           // onCreate={this.props.}
+          onDelete={this.onDelete}
           onCreate={this.onCreate}
           onChange={this.onChange}
         />
@@ -80,7 +74,7 @@ const mapDispatchProps = (dispatch: Dispatch) => {
   return {
     todoCreate: (createInput: string) =>
       dispatch(actions.todoCreate(createInput)),
-    // todoDelete: (id) =? typeof actions.todoDelete;
+    todoDelete: (id: number) => dispatch(actions.todoDelete(id)),
   };
 };
 

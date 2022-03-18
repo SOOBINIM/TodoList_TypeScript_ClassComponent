@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Div = styled.div`
   margin: 0 auto;
@@ -68,6 +69,8 @@ const Li = styled.li`
   justify-content: space-between;
 `;
 
+const noPointer = { cursor: "pointer" };
+
 type todoProps = {
   todoItem: {
     id: number;
@@ -77,7 +80,7 @@ type todoProps = {
   createInput: string;
   onCreate: (e: React.FormEvent) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  // onDelete: (id: number) => void;
+  onDelete: (id: number) => void;
 };
 
 export default class TodoCreate extends React.Component<todoProps> {
@@ -96,7 +99,18 @@ export default class TodoCreate extends React.Component<todoProps> {
         <UlDiv>
           <ul>
             {this.props.todoItem.map((data) => (
-              <Li>{data.todoTitle}</Li>
+              <Li>
+                {data.todoTitle}
+                <div>
+                  <DeleteIcon
+                    fontSize="medium"
+                    style={noPointer}
+                    onClick={() => this.props.onDelete(data.id)}
+                  >
+                    삭제
+                  </DeleteIcon>
+                </div>
+              </Li>
             ))}
           </ul>
         </UlDiv>
