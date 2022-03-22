@@ -1,7 +1,10 @@
 import Ticker from "react-ticker";
 import React from "react";
+import { Mode } from "@mui/icons-material";
 
-interface Props {}
+interface Props {
+  tickerText: string;
+}
 
 interface State {}
 
@@ -12,7 +15,7 @@ export default class TodoTicker extends React.Component<Props, State> {
         <Ticker>
           {() => (
             <>
-              <h1 style={{ paddingRight: "0.5em" }}>수빈아 할 수 있어!</h1>
+              <h1 style={{ paddingRight: "0.5em" }}>{this.props.tickerText}</h1>
             </>
           )}
         </Ticker>

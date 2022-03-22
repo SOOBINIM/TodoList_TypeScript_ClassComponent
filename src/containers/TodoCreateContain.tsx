@@ -1,8 +1,9 @@
 // import { useSelector, useDispatch } from "react-redux";
-import { ThermostatOutlined } from "@mui/icons-material";
+// import { ThermostatOutlined } from "@mui/icons-material";
 import React from "react";
-import { connect, MapDispatchToProps } from "react-redux";
+import { connect } from "react-redux";
 import { Dispatch } from "redux";
+import { Navigate } from "react-router-dom";
 
 // 프레젠테이셔널 컴포넌트
 import TodoCreate from "../components/TodoCreatePresent";
@@ -43,6 +44,10 @@ class TodoContainer extends React.Component<TodoContainerProps> {
   };
 
   render(): React.ReactNode {
+    const isLoggedIn = true;
+    if (!isLoggedIn) {
+      return <Navigate to="/" replace={true} />;
+    }
     return (
       <div>
         <TodoCreate
