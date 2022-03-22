@@ -1,14 +1,3 @@
-// const http = require("http");
-// const mockserver = require("mockserver");
-
-// const argv = require("yargs").argv;
-// // const portAPI = argv.portAPI || 9001;
-// const directory = argv.dir || "mocks";
-
-// mockserver.headers = ["Authorization", "X-My-Header"];
-
-// http.createServer(mockserver(directory)).listen(9001);
-
 const http = require("http");
 const mockserver = require("mockserver");
 

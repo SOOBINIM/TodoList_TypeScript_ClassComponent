@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import qs from "query-string";
+
+import { Route, Link } from "react-router-dom";
 
 const Div = styled.div`
   margin: 0 auto;
@@ -68,31 +71,15 @@ const LoginButton = styled.button`
 interface Props {}
 
 interface State {
-  reqObj: {
-    id: string;
-    pw: string;
-  };
+  idInput: string;
+  pwInput: string;
+  // apiData: {
+  //   success: boolean;
+  //   result: string;
+  // };
 }
 
 // const loginDB = (id: string, pw: string) => {};
-
-const url =
-  "https://9acf627a-ff2c-40b7-a746-0f83c951d2dd.mock.pstmn.io/login/success";
-
-axios
-  .post(url, {
-    id: "soo2",
-    pw: "soobin",
-  })
-  .then(function (response) {
-    console.log(response.data);
-  })
-  .catch(function (error) {
-    console.log(error);
-  })
-  .then(function () {
-    // 항상 실행
-  });
 
 // async await 함수를 사용할 때,
 
@@ -104,6 +91,60 @@ axios
 // }
 
 class Login extends React.Component<Props, State> {
+  state = {
+    idInput: "",
+    pwInput: "",
+  };
+
+  onChangeID = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { value } = e.currentTarget;
+    console.log("IDInput값 변화 : ", value);
+    this.setState({
+      idInput: value,
+    });
+  };
+
+  onChangePW = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { value } = e.currentTarget;
+    console.log("PWInput값 변화 : ", value);
+    this.setState({
+      pwInput: value,
+    });
+  };
+
+  onLogin = (e: React.FormEvent): void => {
+    e.preventDefault();
+
+    let data = {
+      id: this.state.idInput,
+      pw: this.state.pwInput,
+    };
+    const headers = {
+      "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+      Accept: "*/*",
+    };
+
+    axios
+      .post(
+        "http://localhost:9001/apis/menus/login/users",
+        qs.stringify(data),
+        { headers }
+      )
+      .then((res) => {
+        console.log(res.data["success"]);
+        // console.log(JSON.stringify(res.data["success"]));
+        // this.setState({
+        //     console.log(JSON.stringify(res.data["success"])
+        // })
+        // commit("loginSuccess", asd);
+      })
+      .catch((error) => {
+        console.log(error);
+        // throw new Error(error);
+      });
+    // return JSON.stringify(res.data["success"]);
+  };
+
   render(): React.ReactNode {
     return (
       <Div>
@@ -112,13 +153,25 @@ class Login extends React.Component<Props, State> {
         </div>
         <div>
           <Label>아이디</Label>
-          <Input placeholder="아이디를 입력하시오"></Input>
+          <Input
+            placeholder="아이디를 입력하시오"
+            onChange={this.onChangeID}
+            value={this.state.idInput}
+          ></Input>
         </div>
         <div>
           <Label>비밀번호</Label>
-          <Input placeholder="비밀번호를 입력하시오"></Input>
+          <Input
+            placeholder="비밀번호를 입력하시오"
+            onChange={this.onChangePW}
+            value={this.state.pwInput}
+          ></Input>
         </div>
-        <LoginButton type="submit">로그인 하기</LoginButton>
+        <Link to="/todoList">
+          <LoginButton type="submit" onClick={this.onLogin}>
+            로그인 하기
+          </LoginButton>
+        </Link>
       </Div>
     );
   }
