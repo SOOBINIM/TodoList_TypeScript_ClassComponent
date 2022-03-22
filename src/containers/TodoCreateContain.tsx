@@ -44,7 +44,8 @@ class TodoContainer extends React.Component<TodoContainerProps> {
   };
 
   render(): React.ReactNode {
-    const isLoggedIn = true;
+    const isLoggedIn = localStorage.getItem("access_token");
+    // console.log(isLoggedIn);
     if (!isLoggedIn) {
       return <Navigate to="/" replace={true} />;
     }

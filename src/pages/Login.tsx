@@ -1,9 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import qs from "query-string";
 
-import { Route, Link } from "react-router-dom";
+import { withRouter } from "../components/withRouter";
+
+// import { Navigate } from "react-router-dom";
 
 const Div = styled.div`
   margin: 0 auto;
@@ -68,7 +70,9 @@ const LoginButton = styled.button`
   outline: none;
 `;
 
-interface Props {}
+interface Props {
+  navigate: (e: string) => void;
+}
 
 interface State {
   idInput: string;
@@ -119,6 +123,7 @@ class Login extends React.Component<Props, State> {
       id: this.state.idInput,
       pw: this.state.pwInput,
     };
+
     const headers = {
       "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
       Accept: "*/*",
@@ -131,7 +136,14 @@ class Login extends React.Component<Props, State> {
         { headers }
       )
       .then((res) => {
-        console.log(res.data["success"]);
+        if (res.data["success"] === true) {
+          localStorage.setItem("access_token", res.data["success"]);
+          console.log("투두리스트로 이동");
+          this.props.navigate("todoList");
+          // this.props.navigator("/todoList");
+        } else {
+          alert("로그인 정보가 옳바르지 않습니다.");
+        }
         // console.log(JSON.stringify(res.data["success"]));
         // this.setState({
         //     console.log(JSON.stringify(res.data["success"])
@@ -140,7 +152,6 @@ class Login extends React.Component<Props, State> {
       })
       .catch((error) => {
         console.log(error);
-        // throw new Error(error);
       });
     // return JSON.stringify(res.data["success"]);
   };
@@ -167,14 +178,12 @@ class Login extends React.Component<Props, State> {
             value={this.state.pwInput}
           ></Input>
         </div>
-        <Link to="/todoList">
-          <LoginButton type="submit" onClick={this.onLogin}>
-            로그인 하기
-          </LoginButton>
-        </Link>
+        <LoginButton type="submit" onClick={this.onLogin}>
+          로그인 하기
+        </LoginButton>
       </Div>
     );
   }
 }
 
-export default Login;
+export default withRouter(Login);
